@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+.DS_Store
+
 #mvn
 .mvn
 mvnw
