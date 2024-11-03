@@ -2,10 +2,7 @@ package edu.miu.TradingPlatform.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,5 +20,7 @@ public class User {
     private String userEmail;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String userPassword;
+    @Embedded
+    private TwoFactorAuthentication twoFactorAuthentication = new TwoFactorAuthentication();
     private USER_ROLE userRole = USER_ROLE.CUSTOMER;   // By default customer
 }
