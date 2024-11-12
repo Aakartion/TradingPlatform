@@ -1,4 +1,4 @@
-package edu.miu.TradingPlatform.service;
+package edu.miu.TradingPlatform.service.security_service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

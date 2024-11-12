@@ -1,15 +1,12 @@
-package edu.miu.TradingPlatform.service;
+package edu.miu.TradingPlatform.service.security_service;
 
 import edu.miu.TradingPlatform.domain.Users;
 import edu.miu.TradingPlatform.repositorie.UserRepository;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -25,9 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         if(user == null){
             throw new UsernameNotFoundException(username);
         }
-        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
+//        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>();
+//
+//        return new org.springframework.security.core.userdetails.User(user.getUserEmail()
+//        ,user.getUserPassword(), grantedAuthorityList);
 
-        return new org.springframework.security.core.userdetails.User(user.getUserEmail()
-        ,user.getUserPassword(), grantedAuthorityList);
+        return new CustomUserPrinciple(user);
     }
 }

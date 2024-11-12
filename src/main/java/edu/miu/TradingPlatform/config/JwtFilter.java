@@ -1,7 +1,7 @@
 package edu.miu.TradingPlatform.config;
 
-import edu.miu.TradingPlatform.service.CustomUserDetailsService;
-import edu.miu.TradingPlatform.service.JwtService;
+import edu.miu.TradingPlatform.service.security_service.CustomUserDetailsService;
+import edu.miu.TradingPlatform.service.security_service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
