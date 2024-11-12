@@ -20,7 +20,6 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
     private final ApplicationContext applicationContext;
 
     public JwtFilter(JwtService jwtService, ApplicationContext applicationContext) {
@@ -36,11 +35,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
+            System.out.println("This is token: " + token);
             username = jwtService.extractUserName(token);
         }
 
+        System.out.println("This is username: " + username);
+        System.out.println("SecurityContext: " + SecurityContextHolder.getContext().getAuthentication());
+
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = applicationContext.getBean(CustomUserDetailsService.class).loadUserByUsername(username);
+            System.out.println("User Details: " + userDetails.getUsername() + " " + userDetails.getAuthorities());
             if(jwtService.validateToken(token, userDetails )){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
