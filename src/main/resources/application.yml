@@ -3,13 +3,13 @@ spring:
     name: tradingPlatform
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:mysql://localhost:3306/tradingApp
+    url: jdbc:postgresql://localhost:5432/trading-app
     username: root
     password: 12345
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
 
 
 server:

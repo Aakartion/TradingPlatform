@@ -1,7 +1,11 @@
 package edu.miu.TradingPlatform.repositorie;
 
-import edu.miu.TradingPlatform.domain.User;
+import edu.miu.TradingPlatform.domain.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<Users, Long> {
+
+    Users findUserByUserEmail(String userEmail);
 }

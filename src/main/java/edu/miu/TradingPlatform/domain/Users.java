@@ -4,14 +4,11 @@ package edu.miu.TradingPlatform.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 @Entity
-public class User {
+@Table(name = "tradingUsers")
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
