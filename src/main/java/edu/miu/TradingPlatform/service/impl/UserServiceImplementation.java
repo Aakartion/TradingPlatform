@@ -1,6 +1,9 @@
 package edu.miu.TradingPlatform.service.impl;
 
 import edu.miu.TradingPlatform.domain.Users;
+import edu.miu.TradingPlatform.dto.request.UserRequestDTO;
+import edu.miu.TradingPlatform.dto.response.UserResponseDTO;
+import edu.miu.TradingPlatform.mapper.UsersMapper;
 import edu.miu.TradingPlatform.repositorie.UserRepository;
 import edu.miu.TradingPlatform.service.UserService;
 import edu.miu.TradingPlatform.service.security_service.JwtService;
@@ -20,19 +23,27 @@ public class UserServiceImplementation implements UserService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     private final AuthenticationManager authenticationManager;
 
+    private final UsersMapper usersMapper;
+
     public UserServiceImplementation(UserRepository userRepository,
                                      JwtService jwtService,
-                                     AuthenticationManager authenticationManager) {
+                                     AuthenticationManager authenticationManager,
+                                     UsersMapper usersMapper) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.usersMapper = usersMapper;
     }
 
     @Override
-    public Users addUser(Users user) {
+    public UserResponseDTO addUser(UserRequestDTO userRequestDTO) {
+        Users user = usersMapper.usersRequestDtoToUsers(userRequestDTO);
+        System.out.println("This is usr: " + user.getUserLastName() + " " + user.getUserEmail());
         String encodedPassword = encoder.encode(user.getUserPassword());
         user.setUserPassword(encodedPassword);
-        return userRepository.save(user);
+        userRepository.save(user);
+        UserResponseDTO userResponseDTO = usersMapper.usersToUserResponseDto(user);
+        return userResponseDTO;
     }
 
     @Override

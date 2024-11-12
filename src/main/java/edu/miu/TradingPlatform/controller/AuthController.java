@@ -1,6 +1,8 @@
 package edu.miu.TradingPlatform.controller;
 
 import edu.miu.TradingPlatform.domain.Users;
+import edu.miu.TradingPlatform.dto.request.UserRequestDTO;
+import edu.miu.TradingPlatform.dto.response.UserResponseDTO;
 import edu.miu.TradingPlatform.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public ResponseEntity<Users> registerUser(@RequestBody Users user){
-        Users savedUser = userService.addUser(user);
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO){
+        UserResponseDTO savedUser = userService.addUser(userRequestDTO);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 }
