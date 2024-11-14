@@ -1,9 +1,11 @@
 package edu.miu.TradingPlatform.controller;
 
-import edu.miu.TradingPlatform.domain.Users;
+import edu.miu.TradingPlatform.dto.request.UserRequestDTO;
+import edu.miu.TradingPlatform.dto.response.UserLoginResponseDTO;
 import edu.miu.TradingPlatform.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import jakarta.mail.MessagingException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +20,18 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Users user){
-        return userService.verifyUser(user);
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserRequestDTO userRequestDTO) throws MessagingException {
+        System.out.println("userRequestDTO.twoFactorAuthentication: " + userRequestDTO.twoFactorAuthentication());
+        if (userRequestDTO.twoFactorAuthentication().isTwoFactorAuthenticationEnabled()) {
+            System.out.println("*************It is NULL");
+            userRequestDTO = UserRequestDTO.withDefaultTwoFactorAuth(
+                    userRequestDTO.userFirstName(),
+                    userRequestDTO.userLastName(),
+                    userRequestDTO.userEmail(),
+                    userRequestDTO.userPassword()
+            );
+        }
+        System.out.println("It is ***not*** NULL "+ userRequestDTO.twoFactorAuthentication());
+        return new ResponseEntity<>(userService.verifyUser(userRequestDTO), HttpStatus.OK);
     }
 }

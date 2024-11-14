@@ -31,19 +31,19 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader(JwtConstant.JWT_HEADER);
         String token = null;
-        String username = null;
+        String userEmail = null;
 
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             token = authHeader.substring(7);
             System.out.println("This is token: " + token);
-            username = jwtService.extractUserName(token);
+            userEmail = jwtService.extractUserName(token);
         }
 
-        System.out.println("This is username: " + username);
+        System.out.println("This is username: " + userEmail);
         System.out.println("SecurityContext: " + SecurityContextHolder.getContext().getAuthentication());
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = applicationContext.getBean(CustomUserDetailsService.class).loadUserByUsername(username);
+        if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            UserDetails userDetails = applicationContext.getBean(CustomUserDetailsService.class).loadUserByUsername(userEmail);
             System.out.println("User Details: " + userDetails.getUsername() + " " + userDetails.getAuthorities());
             if(jwtService.validateToken(token, userDetails )){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

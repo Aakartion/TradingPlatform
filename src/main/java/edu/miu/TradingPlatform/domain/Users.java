@@ -2,6 +2,7 @@ package edu.miu.TradingPlatform.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.miu.TradingPlatform.model.TwoFactorAuthentication;
 import jakarta.persistence.*;
 import lombok.Data;
 
