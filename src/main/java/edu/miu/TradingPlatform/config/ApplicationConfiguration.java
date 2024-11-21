@@ -1,6 +1,6 @@
 package edu.miu.TradingPlatform.config;
 
-import edu.miu.TradingPlatform.repositorie.UserRepository;
+import edu.miu.TradingPlatform.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

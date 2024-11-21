@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Coins {
 
     @Id
-    @Column(name = "id", nullable = false, unique = true)
-    @JsonProperty("id")
-    private String id; // Example: "bitcoin"
+    @Column(name = "coin_id", nullable = false, unique = true)
+    @JsonProperty("coin_id")
+    private String coinsId; // Example: "bitcoin"
 
     @Column(name = "symbol", nullable = false)
     @JsonProperty("symbol")

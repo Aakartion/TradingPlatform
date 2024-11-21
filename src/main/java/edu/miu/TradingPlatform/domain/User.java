@@ -29,16 +29,18 @@ public class User implements UserDetails {
     @Embedded
     private TwoFactorAuthentication twoFactorAuthentication = new TwoFactorAuthentication();
     @Enumerated(EnumType.STRING)
-    private USER_ROLE userRole = USER_ROLE.ROLE_CUSTOMER;   // By default customer
+    private USER_ROLE userRole;
 
     public User(String userFirstName,
                 String userLastName,
                 String userEmail,
-                String userPassword) {
+                String userPassword,
+                USER_ROLE userRole) {
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        this.userRole = USER_ROLE.ROLE_CUSTOMER;   // By default customer
 
     }
 

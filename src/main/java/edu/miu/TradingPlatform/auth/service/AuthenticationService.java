@@ -5,7 +5,7 @@ import edu.miu.TradingPlatform.auth.request.RegisterRequestDTO;
 import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
 import edu.miu.TradingPlatform.config.JwtService;
 import edu.miu.TradingPlatform.domain.User;
-import edu.miu.TradingPlatform.repositorie.UserRepository;
+import edu.miu.TradingPlatform.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,7 +36,8 @@ public class AuthenticationService {
                 registerRequestDTO.userFirstName(),
                 registerRequestDTO.userLastName(),
                 registerRequestDTO.userEmail(),
-                passwordEncoder.encode(registerRequestDTO.userPassword())
+                passwordEncoder.encode(registerRequestDTO.userPassword()),
+                null
         );
         User registeredUser = userRepository.save(user);
 
