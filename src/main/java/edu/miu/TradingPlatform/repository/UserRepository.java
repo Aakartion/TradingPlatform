@@ -1,4 +1,4 @@
-package edu.miu.TradingPlatform.repositorie;
+package edu.miu.TradingPlatform.repository;
 
 import edu.miu.TradingPlatform.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
