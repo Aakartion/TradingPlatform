@@ -1,5 +1,6 @@
 package edu.miu.TradingPlatform.service.coins.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.miu.TradingPlatform.domain.Coins;
 import edu.miu.TradingPlatform.dto.coins.response.CoinsResponseDTO;
@@ -53,8 +54,24 @@ public class CoinsServiceImpl implements CoinsService {
   }
 
   @Override
-  public String getMarketChart(String coinId, int days) {
-    return "";
+  public JsonNode getMarketChart(String coinId, int days) throws Exception {
+//    "https://api.coingecko.com/api/v3/coins/{bitcoin}/market_chart?vs_currency=usd&days=1"
+    try{
+      return webClient
+          .get()
+          .uri(
+              uriBuilder ->
+                  uriBuilder
+                      .path("/coins/{coinId}/market_chart")
+                      .queryParam("vs_currency", "usd")
+                      .queryParam("days", days)
+                      .build(coinId))
+          .retrieve()
+          .bodyToMono(JsonNode.class)
+          .block();
+    }catch (Exception e){
+      throw new Exception(e.getMessage());
+    }
   }
 
   @Override
