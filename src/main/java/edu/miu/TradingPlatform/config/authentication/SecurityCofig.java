@@ -1,4 +1,4 @@
-package edu.miu.TradingPlatform.config;
+package edu.miu.TradingPlatform.config.authentication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,8 @@ public class SecurityCofig {
                 .authorizeHttpRequests(req->req.requestMatchers("/api/v1/auth/*")
                         .permitAll()
                         .anyRequest()
-                        .authenticated())
+                        .permitAll())
+//                        .authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(management->management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

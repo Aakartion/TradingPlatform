@@ -1,4 +1,4 @@
-package edu.miu.TradingPlatform.config;
+package edu.miu.TradingPlatform.config.authentication;
 
 import edu.miu.TradingPlatform.repository.UserRepository;
 import org.springframework.context.annotation.Bean;

@@ -3,7 +3,7 @@ package edu.miu.TradingPlatform.auth.service;
 import edu.miu.TradingPlatform.auth.request.AuthenticationRequestDTO;
 import edu.miu.TradingPlatform.auth.request.RegisterRequestDTO;
 import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
-import edu.miu.TradingPlatform.config.JwtService;
+import edu.miu.TradingPlatform.config.authentication.JwtService;
 import edu.miu.TradingPlatform.domain.User;
 import edu.miu.TradingPlatform.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
