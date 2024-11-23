@@ -113,9 +113,14 @@ public class Coins {
     @JsonProperty("atl_date")
     private LocalDateTime atlDate; // Example: "2013-07-06T00:00:00.000Z"
 
-    @Column(name = "roi")
-    @JsonProperty("roi")
-    private Double roi; // Example: null
+    @Column(name = "roi_times")
+    private Double roiTimes;
+
+    @Column(name = "roi_currency")
+    private String roiCurrency;
+
+    @Column(name = "roi_percentage")
+    private Double roiPercentage;
 
     @Column(name = "last_updated")
     @JsonProperty("last_updated")
