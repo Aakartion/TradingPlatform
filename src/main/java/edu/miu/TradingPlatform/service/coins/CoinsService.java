@@ -12,7 +12,7 @@ public interface CoinsService {
 
   JsonNode getMarketChart(String coinId, int days) throws Exception;
 
-  String getCoinsDetails(String coinId);
+  JsonNode getCoinsDetails(String coinId) throws Exception;
 
   Coins findCoinByCoinId(String coinId);
 

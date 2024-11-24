@@ -37,4 +37,10 @@ public class CoinController {
         JsonNode jsonNode = coinsService.getMarketChart(coinId, days);
         return new ResponseEntity<>(jsonNode, HttpStatus.OK);
     }
+
+    @GetMapping("/trading/{coinId}")
+    public ResponseEntity<JsonNode> getCoinsDetails(@PathVariable String coinId) throws Exception {
+        JsonNode responseJsonNode = coinsService.getCoinsDetails(coinId);
+        return new ResponseEntity<>(responseJsonNode, HttpStatus.OK);
+    }
 }

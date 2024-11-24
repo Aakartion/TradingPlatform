@@ -75,8 +75,49 @@ public class CoinsServiceImpl implements CoinsService {
   }
 
   @Override
-  public String getCoinsDetails(String coinId) {
-    return "";
+  public JsonNode getCoinsDetails(String coinId) throws Exception {
+    //    https://api.coingecko.com/api/v3/coins/{bitcoin}
+    try {
+      JsonNode jsonNode =
+          webClient
+              .get()
+              .uri(uriBuilder -> uriBuilder.path("/coins/{coinId}").build(coinId))
+              .retrieve()
+              .bodyToMono(JsonNode.class)
+              .block();
+      Coins coin = new Coins();
+      coin.setId(jsonNode.get("id").asText());
+      coin.setName(jsonNode.has("name") ? jsonNode.get("name").asText() : "Unknown");
+      coin.setSymbol(jsonNode.has("symbol") ? jsonNode.get("symbol").asText() : "N/A");
+
+      coin.setImage(
+          jsonNode.has("image") && jsonNode.get("image").has("large")
+              ? jsonNode.get("image").get("large").asText()
+              : null);
+
+      JsonNode marketData = jsonNode.get("market_data");
+      if (marketData != null) {
+        coin.setCurrentPrice(
+            marketData.has("current_price") && marketData.get("current_price").has("usd")
+                ? marketData.get("current_price").get("usd").asDouble()
+                : 0.0);
+        coin.setMarketCap(
+            marketData.has("market_cap") && marketData.get("market_cap").has("usd")
+                ? marketData.get("market_cap").get("usd").asLong()
+                : 0L);
+        coin.setMarketCapRank(
+            marketData.has("market_cap_rank") ? marketData.get("market_cap_rank").asInt() : 0);
+        coin.setTotalVolume(
+            marketData.has("total_volume") && marketData.get("total_volume").has("usd")
+                ? marketData.get("total_volume").get("usd").asLong()
+                : 0L);
+      }
+      coinsRepository.save(coin);
+      return jsonNode;
+
+    } catch (Exception e) {
+      throw new Exception("Error fetching coin details: " + e.getMessage());
+    }
   }
 
   @Override

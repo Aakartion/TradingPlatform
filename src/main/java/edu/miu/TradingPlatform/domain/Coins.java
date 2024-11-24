@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Coins {
 
     @Id
-    @Column(name = "coin_id", nullable = false, unique = true)
-    @JsonProperty("coin_id")
-    private String coinsId; // Example: "bitcoin"
+    @Column(name = "id", nullable = false, unique = true)
+    @JsonProperty("id")
+    private String id; // Example: "bitcoin"
 
     @Column(name = "symbol", nullable = false)
     @JsonProperty("symbol")
@@ -33,15 +33,15 @@ public class Coins {
     @JsonProperty("image")
     private String image; // Example: URL for image
 
-    @Column(name = "current_price", nullable = false)
+    @Column(name = "current_price")
     @JsonProperty("current_price")
     private Double currentPrice; // Example: 90686
 
-    @Column(name = "market_cap", nullable = false)
+    @Column(name = "market_cap")
     @JsonProperty("market_cap")
     private Long marketCap; // Example: 1791022964984
 
-    @Column(name = "market_cap_rank", nullable = false)
+    @Column(name = "market_cap_rank")
     @JsonProperty("market_cap_rank")
     private Integer marketCapRank; // Example: 1
 
@@ -49,15 +49,15 @@ public class Coins {
     @JsonProperty("fully_diluted_valuation")
     private Long fullyDilutedValuation; // Example: 1901131619777
 
-    @Column(name = "total_volume", nullable = false)
+    @Column(name = "total_volume")
     @JsonProperty("total_volume")
     private Long totalVolume; // Example: 49951785346
 
-    @Column(name = "high_24h", nullable = false)
+    @Column(name = "high_24h")
     @JsonProperty("high_24h")
     private Double high24h; // Example: 91439
 
-    @Column(name = "low_24h", nullable = false)
+    @Column(name = "low_24h")
     @JsonProperty("low_24h")
     private Double low24h; // Example: 88774
 
