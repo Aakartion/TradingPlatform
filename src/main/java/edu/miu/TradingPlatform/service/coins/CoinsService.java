@@ -1,5 +1,6 @@
 package edu.miu.TradingPlatform.service.coins;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import edu.miu.TradingPlatform.domain.Coins;
 import edu.miu.TradingPlatform.dto.coins.response.CoinsResponseDTO;
 
@@ -9,15 +10,15 @@ public interface CoinsService {
 
   List<CoinsResponseDTO> getCoinList(int page) throws Exception;
 
-  String getMarketChart(String coinId, int days);
+  JsonNode getMarketChart(String coinId, int days) throws Exception;
 
-  String getCoinsDetails(String coinId);
+  JsonNode getCoinsDetails(String coinId) throws Exception;
 
-  Coins findCoinByCoinId(String coinId);
+  Coins findCoinByCoinId(String coinId) throws Exception;
 
-  String searchCoin(String keyword);
+  JsonNode searchCoin(String keyword) throws Exception;
 
-  String getTop50CoinsByMarketCapRank();
+  JsonNode getTop50CoinsByMarketCapRank() throws Exception;
 
-  String getTradingCoins();
+  JsonNode getTrendingCoins() throws Exception;
 }
