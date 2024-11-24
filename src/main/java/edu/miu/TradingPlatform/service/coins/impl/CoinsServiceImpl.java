@@ -151,12 +151,36 @@ public class CoinsServiceImpl implements CoinsService {
   }
 
   @Override
-  public String getTop50CoinsByMarketCapRank() {
-    return "";
+  public JsonNode getTop50CoinsByMarketCapRank() throws Exception {
+//    https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&per_page=50&page=1;
+    try{
+      return webClient.get()
+              .uri(uriBuilder ->
+                      uriBuilder.path("/coins/markets")
+                              .queryParam("vs_currency","usd")
+                              .queryParam("per_page","50")
+                              .queryParam("page","1")
+                              .build())
+              .retrieve()
+              .bodyToMono(JsonNode.class)
+              .block();
+    }catch (Exception e){
+      throw new Exception(e.getMessage());
+    }
   }
 
   @Override
-  public String getTradingCoins() {
-    return "";
+  public JsonNode getTrendingCoins() throws Exception {
+    //     https://api.coingecko.com/api/v3/search/trending;
+    try {
+      return webClient
+          .get()
+          .uri(uriBuilder -> uriBuilder.path("/search/trending").build())
+          .retrieve()
+          .bodyToMono(JsonNode.class)
+          .block();
+    } catch (Exception e) {
+      throw new Exception(e.getMessage());
+    }
   }
 }
