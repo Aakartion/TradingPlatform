@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CoinsServiceImpl implements CoinsService {
@@ -22,8 +23,7 @@ public class CoinsServiceImpl implements CoinsService {
 
   public CoinsServiceImpl(
       CoinsRepository coinsRepository,
-      ObjectMapper objectMapper,
-      WebClient webClient) {
+      ObjectMapper objectMapper) {
     this.coinsRepository = coinsRepository;
     this.objectMapper = objectMapper;
     this.webClient = WebClient.builder().baseUrl("https://api.coingecko.com/api/v3").build();
@@ -121,13 +121,33 @@ public class CoinsServiceImpl implements CoinsService {
   }
 
   @Override
-  public Coins findCoinByCoinId(String coinId) {
-    return null;
+  public Coins findCoinByCoinId(String coinId) throws Exception {
+    Optional<Coins> searchCoin = coinsRepository.findById(coinId);
+    if(searchCoin.isPresent()){
+      return searchCoin.get();
+    }
+    throw new Exception("Coin: " + coinId + " not found");
   }
 
   @Override
-  public String searchCoin(String keyword) {
-    return "";
+  public JsonNode searchCoin(String searchKeyword) throws Exception {
+    //    "https://api.coingecko.com/api/v3/search?query=" + searchKeyword (it can be a word or
+    // letter)
+    try {
+
+      return webClient
+          .get()
+          .uri(uriBuilder ->
+                  uriBuilder
+                          .path("/search")
+                          .queryParam("query", searchKeyword)
+                          .build())
+              .retrieve()
+              .bodyToMono(JsonNode.class)
+              .block();
+    } catch (Exception e) {
+      throw new Exception(e.getMessage());
+    }
   }
 
   @Override

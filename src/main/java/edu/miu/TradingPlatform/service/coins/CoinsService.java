@@ -14,9 +14,9 @@ public interface CoinsService {
 
   JsonNode getCoinsDetails(String coinId) throws Exception;
 
-  Coins findCoinByCoinId(String coinId);
+  Coins findCoinByCoinId(String coinId) throws Exception;
 
-  String searchCoin(String keyword);
+  JsonNode searchCoin(String keyword) throws Exception;
 
   String getTop50CoinsByMarketCapRank();
 

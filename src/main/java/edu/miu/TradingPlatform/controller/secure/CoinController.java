@@ -3,10 +3,8 @@ package edu.miu.TradingPlatform.controller.secure;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.miu.TradingPlatform.domain.Coins;
 import edu.miu.TradingPlatform.dto.coins.response.CoinsResponseDTO;
 import edu.miu.TradingPlatform.service.coins.CoinsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +40,11 @@ public class CoinController {
     public ResponseEntity<JsonNode> getCoinsDetails(@PathVariable String coinId) throws Exception {
         JsonNode responseJsonNode = coinsService.getCoinsDetails(coinId);
         return new ResponseEntity<>(responseJsonNode, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<JsonNode> searchCoin(@RequestParam("keyword") String keyword) throws Exception {
+        JsonNode jsonNode = coinsService.searchCoin(keyword);
+        return new ResponseEntity<>(jsonNode, HttpStatus.OK);
     }
 }
