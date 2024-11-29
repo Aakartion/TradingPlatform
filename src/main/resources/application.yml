@@ -1,7 +1,6 @@
 server:
   port: 8080
 
-
 spring:
   application:
     name: tradingPlatform
@@ -18,7 +17,20 @@ spring:
     password: 12345
     driver-class-name: org.postgresql.Driver
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: aakartionsimkhada@gmail.com
+    password: hwto nuju wgtg slf
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 jjt:
   secreteKey: 809936f611def86b02ff4c8804e9fd9e7f6e0365a2b518949478cb4ef78461b97e54012925a3f9cd6051801e786fb520ecfbafc0994f4d04a804815581f34c52
+

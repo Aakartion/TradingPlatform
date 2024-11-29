@@ -37,4 +37,14 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
+  public String getEmailFromJwtToken(String jwtToken) {
+
+    if (jwtToken.startsWith("Bearer ")) {
+      jwtToken = jwtToken.substring(7);
+    }
+    Claims claims = getClaims(jwtToken);
+    String email = claims.getSubject();
+    return email;
+  }
 }
