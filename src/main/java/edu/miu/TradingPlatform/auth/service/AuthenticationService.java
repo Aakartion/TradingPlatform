@@ -55,20 +55,15 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponseDTO authenticate(AuthenticationRequestDTO authenticationRequestDTO) {
-        System.out.println("****PPPKKK");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequestDTO.userEmail(),
                         authenticationRequestDTO.userPassword()
                 )
         );
-        System.out.println("#####");
-//        User user = (User) authentication.getPrincipal();
-        User user = userRepository.findByUserEmail(authenticationRequestDTO.userEmail()).orElseThrow(()-> new UsernameNotFoundException("User not Found"));
-        System.out.println("This is user=> " + user);
+        User user = (User) authentication.getPrincipal();
+//        User user = userRepository.findByUserEmail(authenticationRequestDTO.userEmail()).orElseThrow(()-> new UsernameNotFoundException("User not Found"));
         String token = jwtService.generateToken(user);
-        System.out.println("Token: " + token);
-        System.out.println("This is user email: " + user.getUserEmail());
         return new AuthenticationResponseDTO(token,true, "Hey hey", true, "Session session");
     }
 }

@@ -27,7 +27,6 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO authenticationRequestDTO){
-        System.out.println("Login is Hit");
         AuthenticationResponseDTO authenticationResponseDTO = authenticationService.authenticate(authenticationRequestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(authenticationResponseDTO);
     }
