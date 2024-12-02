@@ -16,7 +16,7 @@ public class EmailService {
     this.mailSender = mailSender;
   }
 
-  public void sendVerificationOtpEmail(String to, String OTP) throws MessagingException {
+  public void sendVerificationOtpEmail(String to, String OTP) {
     try {
       MimeMessage mimeMessage = mailSender.createMimeMessage();
       MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
