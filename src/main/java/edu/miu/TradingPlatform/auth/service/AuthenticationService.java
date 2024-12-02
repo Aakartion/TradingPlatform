@@ -4,14 +4,18 @@ import edu.miu.TradingPlatform.auth.request.AuthenticationRequestDTO;
 import edu.miu.TradingPlatform.auth.request.RegisterRequestDTO;
 import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
 import edu.miu.TradingPlatform.config.authentication.JwtService;
+import edu.miu.TradingPlatform.domain.TwoFactorOTP;
 import edu.miu.TradingPlatform.domain.User;
+import edu.miu.TradingPlatform.exception.ResourceAlreadyPresentException;
 import edu.miu.TradingPlatform.repository.UserRepository;
+import edu.miu.TradingPlatform.utils.OtpGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -31,7 +35,12 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AuthenticationResponseDTO register(RegisterRequestDTO registerRequestDTO){
+    public AuthenticationResponseDTO register(RegisterRequestDTO registerRequestDTO) throws Exception {
+
+        Optional<User> existUser = userRepository.findByUserEmail(registerRequestDTO.userEmail());
+        if(existUser.isPresent()){
+            throw new ResourceAlreadyPresentException("Email is already used with another account");
+        }
         User user = new User(
                 registerRequestDTO.userFirstName(),
                 registerRequestDTO.userLastName(),
@@ -39,18 +48,16 @@ public class AuthenticationService {
                 passwordEncoder.encode(registerRequestDTO.userPassword()),
                 null
         );
+
         User registeredUser = userRepository.save(user);
 
 //        Generate the token
         String token = jwtService.generateToken(registeredUser);
 
-        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(
-                token,
-                true,
-                "Successfully Registered",
-                false,
-                "This is session"
-        );
+        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
+        authenticationResponseDTO.setJwtToken(token);
+        authenticationResponseDTO.setStatus(true);
+        authenticationResponseDTO.setMessage("User registered successfully");
         return authenticationResponseDTO;
     }
 
@@ -64,6 +71,20 @@ public class AuthenticationService {
         User user = (User) authentication.getPrincipal();
 //        User user = userRepository.findByUserEmail(authenticationRequestDTO.userEmail()).orElseThrow(()-> new UsernameNotFoundException("User not Found"));
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponseDTO(token,true, "Hey hey", true, "Session session");
+
+//    if (user.getTwoFactorAuthentication().isTwoFactorAuthenticationEnabled()){
+//        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
+//        authenticationResponseDTO.setJwtToken(token);
+//        authenticationResponseDTO.setTwoFactorAuthenticationEnabled(true);
+//        String otpCode = OtpGenerator.generateOtp();
+//        TwoFactorOTP twoFactorOTP = new TwoFactorOTP();
+//
+//    }
+        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
+        authenticationResponseDTO.setJwtToken(token);
+        authenticationResponseDTO.setStatus(true);
+        authenticationResponseDTO.setMessage("User Login successfully");
+      return authenticationResponseDTO;
     }
+
 }

@@ -20,7 +20,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO){
+    public ResponseEntity<AuthenticationResponseDTO> register(@RequestBody RegisterRequestDTO registerRequestDTO) throws Exception {
         AuthenticationResponseDTO authenticationResponseDTO = authenticationService.register(registerRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(authenticationResponseDTO);
     }
