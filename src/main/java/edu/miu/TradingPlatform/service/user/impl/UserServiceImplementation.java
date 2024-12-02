@@ -9,7 +9,7 @@ import edu.miu.TradingPlatform.exception.ResourcesNotFoundException;
 import edu.miu.TradingPlatform.mapper.UserMapper;
 import edu.miu.TradingPlatform.mapper.VerificationCodeMapper;
 import edu.miu.TradingPlatform.repository.UserRepository;
-import edu.miu.TradingPlatform.service.EmailService;
+import edu.miu.TradingPlatform.service.email.EmailService;
 import edu.miu.TradingPlatform.service.forgotPasswordToken.ForgotPasswordTokenService;
 import edu.miu.TradingPlatform.service.user.UserService;
 import edu.miu.TradingPlatform.service.verification.VerificationCodeService;

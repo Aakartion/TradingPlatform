@@ -1,4 +1,4 @@
-package edu.miu.TradingPlatform.service;
+package edu.miu.TradingPlatform.service.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
