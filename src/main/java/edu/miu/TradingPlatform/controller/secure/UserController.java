@@ -1,6 +1,11 @@
 package edu.miu.TradingPlatform.controller.secure;
 
+import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
+import edu.miu.TradingPlatform.auth.response.ForgotPasswordApiResponse;
+import edu.miu.TradingPlatform.domain.ForgotPasswordToken;
 import edu.miu.TradingPlatform.domain.VerificationType;
+import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ForgotPasswordTokenRequest;
+import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ResetPasswordRequestDTO;
 import edu.miu.TradingPlatform.dto.users.response.UserResponseDTO;
 import edu.miu.TradingPlatform.service.user.UserService;
 import org.springframework.http.HttpStatus;
@@ -36,8 +41,17 @@ public class UserController {
     return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
   }
 
-//  @PostMapping("/reset-password/send-otp")
-//  public ResponseEntity<AuthenticationResponseDTO> sendForgotPasswordOtp (@RequestBody ForgotPasswordTokenRequest forgotPasswordTokenRequest) {
-//    AuthenticationResponseDTO authenticationResponseDTO = userService.sendForgotPasswordOtp(forgotPasswordTokenRequest);
-//  }
+  @PostMapping("/reset-password/send-otp")
+  public ResponseEntity<AuthenticationResponseDTO> sendForgotPasswordOtp (@RequestBody ForgotPasswordTokenRequest forgotPasswordTokenRequest) {
+    System.out.println("This is forgot Password request" + forgotPasswordTokenRequest);
+    AuthenticationResponseDTO authenticationResponseDTO = userService.sendForgotPasswordOtp(forgotPasswordTokenRequest);
+    return new ResponseEntity<>(authenticationResponseDTO, HttpStatus.OK);
+  }
+
+  @PatchMapping("/rest-password/verify-otp/{otp}")
+  public ResponseEntity<ForgotPasswordApiResponse> resetPassword(@RequestParam String forgotPasswordTokenId, @RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO, @RequestHeader("Authorization") String jwtToken) {
+    System.out.println("This is jtwOken: " + jwtToken);
+    ForgotPasswordApiResponse forgotPasswordApiResponse = userService.resetPassword(forgotPasswordTokenId, resetPasswordRequestDTO, jwtToken);
+    return new ResponseEntity<>(forgotPasswordApiResponse, HttpStatus.OK);
+  }
 }

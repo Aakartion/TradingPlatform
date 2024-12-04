@@ -1,6 +1,7 @@
 package edu.miu.TradingPlatform.service.forgotPasswordToken;
 
 
+import edu.miu.TradingPlatform.domain.ForgotPasswordToken;
 import edu.miu.TradingPlatform.domain.User;
 import edu.miu.TradingPlatform.domain.VerificationType;
 import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ForgotPasswordTokenRequest;
@@ -8,15 +9,15 @@ import edu.miu.TradingPlatform.dto.forgotPasswordToken.response.ForgotPasswordTo
 import edu.miu.TradingPlatform.dto.users.request.UserRequestDTO;
 
 public interface ForgotPasswordTokenService {
-    ForgotPasswordTokenResponse createForgotPasswordToken (User user,
+    ForgotPasswordToken createForgotPasswordToken (User user,
                                                            String forgotPasswordTokenId,
                                                            String Otp,
                                                            VerificationType verificationType,
                                                            String sendTo);
 
-    ForgotPasswordTokenResponse findForgotPasswordVerificationId(String verificationId);
+    ForgotPasswordToken findForgotPasswordVerificationId(String verificationId);
 
-    ForgotPasswordTokenResponse findByUserId(Long userId);
+    ForgotPasswordToken findByUserId(Long userId);
 
     void deleteForgotPasswordToken(ForgotPasswordTokenRequest forgotPasswordTokenRequest);
 

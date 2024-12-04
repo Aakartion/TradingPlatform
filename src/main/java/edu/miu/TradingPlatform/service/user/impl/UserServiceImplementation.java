@@ -1,8 +1,11 @@
 package edu.miu.TradingPlatform.service.user.impl;
 
+import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
+import edu.miu.TradingPlatform.auth.response.ForgotPasswordApiResponse;
 import edu.miu.TradingPlatform.config.authentication.JwtService;
 import edu.miu.TradingPlatform.domain.*;
-import edu.miu.TradingPlatform.dto.users.request.UserRequestDTO;
+import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ForgotPasswordTokenRequest;
+import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ResetPasswordRequestDTO;
 import edu.miu.TradingPlatform.dto.users.response.UserResponseDTO;
 import edu.miu.TradingPlatform.exception.InValidOTPException;
 import edu.miu.TradingPlatform.exception.ResourcesNotFoundException;
@@ -13,8 +16,11 @@ import edu.miu.TradingPlatform.service.email.EmailService;
 import edu.miu.TradingPlatform.service.forgotPasswordToken.ForgotPasswordTokenService;
 import edu.miu.TradingPlatform.service.user.UserService;
 import edu.miu.TradingPlatform.service.verification.VerificationCodeService;
+import edu.miu.TradingPlatform.utils.OtpGenerator;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 @Service
@@ -119,53 +125,50 @@ public class UserServiceImplementation implements UserService {
     return userResponseDTO;
   }
 
-//  @Override
-//  public AuthenticationResponseDTO sendForgotPasswordOtp(
-//      ForgotPasswordTokenRequest forgotPasswordTokenRequest) {
-//    User user = findUserByJwtToken(forgotPasswordTokenRequest.sendTo());
-//    String otp = OtpGenerator.generateOtp();
-//    UUID uuid = UUID.randomUUID();
-//    String forgotPasswordTokenId = uuid.toString();
-//
-//    ForgotPasswordTokenResponse forgotPasswordTokenResponse =
-//        forgotPasswordTokenService.findByUserId(user.getUserId());
-//
-//    if (forgotPasswordTokenResponse == null) {
-//      forgotPasswordTokenResponse =
-//          forgotPasswordTokenService.createForgotPasswordToken(
-//              user,
-//              forgotPasswordTokenId,
-//              otp,
-//              forgotPasswordTokenRequest.verificationType(),
-//              forgotPasswordTokenRequest.sendTo());
-//    }
-//    if(forgotPasswordTokenRequest.verificationType().equals(VerificationType.EMAIL)) {
-//      emailService.sendVerificationOtpEmail(user.getUserEmail(), otp);
-//    }
-//
-////    String jwtToken,
-////    boolean status,
-////    String message,
-////    boolean isTwoFactorAuthenticationEnabled,
-////    String session
-//
-//
-//    AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO(null, true, );
-//    return null;
-//  }
-
   @Override
-  public UserResponseDTO findUserByEmail(String email) {
-    return null;
+  public AuthenticationResponseDTO sendForgotPasswordOtp(
+      ForgotPasswordTokenRequest forgotPasswordTokenRequest) {
+    User user = findUserByJwtToken(forgotPasswordTokenRequest.sendTo());
+    String otp = OtpGenerator.generateOtp();
+    UUID uuid = UUID.randomUUID();
+    String forgotPasswordTokenId = uuid.toString();
+
+    ForgotPasswordToken forgotPasswordToken =
+        forgotPasswordTokenService.findByUserId(user.getUserId());
+
+    if (forgotPasswordToken == null) {
+      forgotPasswordToken =
+          forgotPasswordTokenService.createForgotPasswordToken(
+              user,
+              forgotPasswordTokenId,
+              otp,
+              forgotPasswordTokenRequest.verificationType(),
+              forgotPasswordTokenRequest.sendTo());
+    }
+    if(forgotPasswordTokenRequest.verificationType().equals(VerificationType.EMAIL)) {
+      emailService.sendVerificationOtpEmail(user.getUserEmail(), otp);
+    }
+
+    AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
+    authenticationResponseDTO.setSession(forgotPasswordToken.getForgotPasswordTokenId());
+    authenticationResponseDTO.setMessage("Password reset OTP sent successfully");
+    return authenticationResponseDTO;
   }
 
   @Override
-  public UserRequestDTO findUserByUserId(Long userId) {
-    return null;
+  public ForgotPasswordApiResponse resetPassword(String forgotPasswordTokenId, ResetPasswordRequestDTO resetPasswordRequestDTO, String jwtToken) {
+    ForgotPasswordToken forgotPasswordToken = forgotPasswordTokenService.findForgotPasswordVerificationId(forgotPasswordTokenId);
+    boolean isVerified = forgotPasswordToken.getOtp().equals(resetPasswordRequestDTO.otp());
+    if(isVerified) {
+      updateUserPassword(forgotPasswordToken.getUser(), resetPasswordRequestDTO.password());
+      ForgotPasswordApiResponse forgotPasswordApiResponse = new ForgotPasswordApiResponse("Password updated successfully");
+      return forgotPasswordApiResponse;
+    }
+    throw new InValidOTPException("Wrong OTP is provided");
   }
 
-  @Override
-  public UserResponseDTO updateUserPassword(UserRequestDTO userRequestDTO, String newPassword) {
-    return null;
+  private User updateUserPassword(User user, String newPassword) {
+    user.setUserPassword(newPassword);
+    return userRepository.save(user);
   }
 }
