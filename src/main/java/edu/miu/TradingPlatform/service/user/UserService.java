@@ -2,6 +2,7 @@ package edu.miu.TradingPlatform.service.user;
 
 import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
 import edu.miu.TradingPlatform.auth.response.ForgotPasswordApiResponse;
+import edu.miu.TradingPlatform.domain.User;
 import edu.miu.TradingPlatform.domain.VerificationType;
 import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ForgotPasswordTokenRequest;
 import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ResetPasswordRequestDTO;
@@ -22,4 +23,6 @@ public interface UserService {
       String forgotPasswordTokenId,
       ResetPasswordRequestDTO resetPasswordRequestDTO,
       String jwtToken);
+
+  User findUserByJwtToken(String jwtToken);
 }

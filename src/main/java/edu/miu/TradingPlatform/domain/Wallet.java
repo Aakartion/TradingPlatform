@@ -3,16 +3,15 @@ package edu.miu.TradingPlatform.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
-public class Assets {
+public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long assetId;
-    private double assetQuantity;
-    private double assetBuyPrice;
-    @ManyToOne
-    private Coins coins;
-    @ManyToOne
+    private Long walletId;
+    @OneToOne
     private User user;
+    private BigDecimal walletBalance;
 }

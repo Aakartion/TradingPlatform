@@ -58,7 +58,7 @@ public class UserServiceImplementation implements UserService {
     return userResponseDTO;
   }
 
-  private User findUserByJwtToken(String jwtToken) {
+  public User findUserByJwtToken(String jwtToken) {
     if (jwtToken == null || jwtToken.trim().isEmpty()) {
       throw new IllegalArgumentException("JWT token cannot be null or empty");
     }
