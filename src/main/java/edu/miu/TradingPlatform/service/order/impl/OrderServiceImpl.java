@@ -27,22 +27,22 @@ public class OrderServiceImpl implements OrderService {
   private final UserService userService;
   private final CoinsService coinsService;
   private final AssetService assetService;
-    private final WalletService walletService;
+  private final WalletService walletService;
 
-    public OrderServiceImpl(
-          OrderRepository orderRepository,
-          OrderItemRepository orderItemRepository,
-          UserService userService,
-          CoinsService coinsService,
-          AssetService assetService,
-          @Lazy WalletService walletService) {
+  public OrderServiceImpl(
+      OrderRepository orderRepository,
+      OrderItemRepository orderItemRepository,
+      UserService userService,
+      CoinsService coinsService,
+      AssetService assetService,
+      @Lazy WalletService walletService) {
     this.orderRepository = orderRepository;
     this.orderItemRepository = orderItemRepository;
     this.userService = userService;
     this.coinsService = coinsService;
     this.assetService = assetService;
-        this.walletService = walletService;
-    }
+    this.walletService = walletService;
+  }
 
   @Override
   public Order createOrder(User user, OrderItem orderItem, ORDER_TYPE orderType) {
@@ -93,37 +93,36 @@ public class OrderServiceImpl implements OrderService {
     throw new InvalidOrderTypeException("Invalid Order Type");
   }
 
-  private Order sellAsset(String jwtToken, Coins coin, double quantity, User user) throws Exception {
+  private Order sellAsset(String jwtToken, Coins coin, double quantity, User user)
+      throws Exception {
     if (quantity <= 0) {
       throw new InvalidOrderTypeException("Quantity should be > 0");
     }
     double sellPrice = coin.getCurrentPrice() * quantity;
-            Assets assetToSell = assetService.findAssetByCoinId(jwtToken, coin.getId());
-            double buyPrice = assetToSell.getAssetBuyPrice();
+    Assets assetToSell = assetService.findAssetByCoinId(jwtToken, coin.getId());
+    double buyPrice = assetToSell.getAssetBuyPrice();
 
-            if(assetToSell != null){
-                OrderItem orderItem = createOrderItem(coin, quantity, buyPrice, sellPrice);
-                Order order = createOrder(user, orderItem, ORDER_TYPE.SELL);
-                orderItem.setOrder(order);
+    if (assetToSell != null) {
+      OrderItem orderItem = createOrderItem(coin, quantity, buyPrice, sellPrice);
+      Order order = createOrder(user, orderItem, ORDER_TYPE.SELL);
+      orderItem.setOrder(order);
 
-                if(assetToSell.getAssetQuantity() >= quantity){
-                    order.setOrderStatus(ORDER_STATUS.SUCCESS);
-                    order.setOrderType(ORDER_TYPE.SELL);
-                    Order savedOrder = orderRepository.save(order);
+      if (assetToSell.getAssetQuantity() >= quantity) {
+        order.setOrderStatus(ORDER_STATUS.SUCCESS);
+        order.setOrderType(ORDER_TYPE.SELL);
+        Order savedOrder = orderRepository.save(order);
 
-                    walletService.payOrderPayment(jwtToken, order.getOrderId());
+        walletService.payOrderPayment(jwtToken, order.getOrderId());
 
-
-                    Assets updatedAsset = assetService.updateAsset(assetToSell.getAssetId(),
-     -quantity);
-                    if(updatedAsset.getAssetQuantity() * coin.getCurrentPrice() <= 1){
-                        assetService.deleteAsset(updatedAsset.getAssetId());
-                    }
-                    return savedOrder;
-                }
-                throw new Exception("Insufficient Quantity to sell");
-            }
-            throw new Exception("Asset not found");
+        Assets updatedAsset = assetService.updateAsset(assetToSell.getAssetId(), -quantity);
+        if (updatedAsset.getAssetQuantity() * coin.getCurrentPrice() <= 1) {
+          assetService.deleteAsset(updatedAsset.getAssetId());
+        }
+        return savedOrder;
+      }
+      throw new Exception("Insufficient Quantity to sell");
+    }
+    throw new Exception("Asset not found");
   }
 
   private OrderItem createOrderItem(
@@ -150,13 +149,12 @@ public class OrderServiceImpl implements OrderService {
     Order savedOrder = orderRepository.save(order);
 
     Assets oldAsset =
-        assetService.findAssetByCoinId(
-            jwtToken, order.getOrderItem().getCoin().getId());
-            if(oldAsset == null){
-                assetService.createAsset(user, orderItem.getCoin(), orderItem.getQuantity());
-            }else {
-                assetService.updateAsset(oldAsset.getAssetId(), quantity);
-            }
+        assetService.findAssetByCoinId(jwtToken, order.getOrderItem().getCoin().getId());
+    if (oldAsset == null) {
+      assetService.createAsset(user, orderItem.getCoin(), orderItem.getQuantity());
+    } else {
+      assetService.updateAsset(oldAsset.getAssetId(), quantity);
+    }
 
     return savedOrder;
   }
