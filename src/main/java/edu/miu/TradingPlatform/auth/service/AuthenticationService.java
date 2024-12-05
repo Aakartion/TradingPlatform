@@ -8,6 +8,8 @@ import edu.miu.TradingPlatform.domain.TwoFactorOTP;
 import edu.miu.TradingPlatform.domain.User;
 import edu.miu.TradingPlatform.exception.ResourceAlreadyPresentException;
 import edu.miu.TradingPlatform.repository.UserRepository;
+import edu.miu.TradingPlatform.service.email.EmailService;
+import edu.miu.TradingPlatform.service.twofactorOTP.TwoFactorOtpService;
 import edu.miu.TradingPlatform.utils.OtpGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,15 +24,19 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
+    private final TwoFactorOtpService twoFactorOtpService;
+    private final EmailService emailService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
     public AuthenticationService(UserRepository userRepository,
-                                 AuthenticationManager authenticationManager,
+                                 AuthenticationManager authenticationManager, TwoFactorOtpService twoFactorOtpService, EmailService emailService,
                                  JwtService jwtService,
                                  PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
+        this.twoFactorOtpService = twoFactorOtpService;
+        this.emailService = emailService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -71,15 +77,23 @@ public class AuthenticationService {
         User user = (User) authentication.getPrincipal();
 //        User user = userRepository.findByUserEmail(authenticationRequestDTO.userEmail()).orElseThrow(()-> new UsernameNotFoundException("User not Found"));
         String token = jwtService.generateToken(user);
+        User userFromDb = userRepository.findByUserEmail(authenticationRequestDTO.userEmail()).get();
 
-//    if (user.getTwoFactorAuthentication().isTwoFactorAuthenticationEnabled()){
-//        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
-//        authenticationResponseDTO.setJwtToken(token);
-//        authenticationResponseDTO.setTwoFactorAuthenticationEnabled(true);
-//        String otpCode = OtpGenerator.generateOtp();
-//        TwoFactorOTP twoFactorOTP = new TwoFactorOTP();
-//
-//    }
+    if (user.getTwoFactorAuthentication().isTwoFactorAuthenticationEnabled()){
+        AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
+        authenticationResponseDTO.setJwtToken(token);
+        authenticationResponseDTO.setTwoFactorAuthenticationEnabled(true);
+        String otpCode = OtpGenerator.generateOtp();
+        TwoFactorOTP oldTwoFactorOTP = twoFactorOtpService.findByUserId(userFromDb.getUserId());
+        if(oldTwoFactorOTP != null){
+            twoFactorOtpService.deleteTwoFactorOtp(oldTwoFactorOTP);
+        }
+        TwoFactorOTP newTwoFactorOTP = twoFactorOtpService.createTwoFactorOtp(userFromDb, otpCode, token);
+        emailService.sendVerificationOtpEmail(authenticationRequestDTO.userEmail(), otpCode);
+
+        authenticationResponseDTO.setSession(newTwoFactorOTP.getTwoFactorOtpId());
+        return authenticationResponseDTO;
+    }
         AuthenticationResponseDTO authenticationResponseDTO = new AuthenticationResponseDTO();
         authenticationResponseDTO.setJwtToken(token);
         authenticationResponseDTO.setStatus(true);
