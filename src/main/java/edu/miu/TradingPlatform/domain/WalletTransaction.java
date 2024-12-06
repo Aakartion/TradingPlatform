@@ -13,7 +13,8 @@ public class WalletTransaction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long walletTransactionId;
     @ManyToOne
-    private Wallet wallet;;
+    private Wallet wallet;
+    @Enumerated(EnumType.STRING)
     private WALLET_TRANSACTION_TYPE walletTransactionType;
     private LocalDate walletTransactionDate;
     private String transferId;   // For Wallet to Wallet transfer

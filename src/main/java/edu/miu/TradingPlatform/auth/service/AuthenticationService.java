@@ -10,6 +10,7 @@ import edu.miu.TradingPlatform.exception.ResourceAlreadyPresentException;
 import edu.miu.TradingPlatform.repository.UserRepository;
 import edu.miu.TradingPlatform.service.email.EmailService;
 import edu.miu.TradingPlatform.service.twofactorOTP.TwoFactorOtpService;
+import edu.miu.TradingPlatform.service.watchlist.WatchListService;
 import edu.miu.TradingPlatform.utils.OtpGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,17 +24,19 @@ import java.util.Optional;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final WatchListService watchListService;
     private final AuthenticationManager authenticationManager;
     private final TwoFactorOtpService twoFactorOtpService;
     private final EmailService emailService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationService(UserRepository userRepository,
+    public AuthenticationService(UserRepository userRepository, WatchListService watchListService,
                                  AuthenticationManager authenticationManager, TwoFactorOtpService twoFactorOtpService, EmailService emailService,
                                  JwtService jwtService,
                                  PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.watchListService = watchListService;
         this.authenticationManager = authenticationManager;
         this.twoFactorOtpService = twoFactorOtpService;
         this.emailService = emailService;
@@ -56,6 +59,7 @@ public class AuthenticationService {
         );
 
         User registeredUser = userRepository.save(user);
+        watchListService.createWatchList(registeredUser);
 
 //        Generate the token
         String token = jwtService.generateToken(registeredUser);

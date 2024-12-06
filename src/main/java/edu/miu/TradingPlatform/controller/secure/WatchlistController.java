@@ -29,7 +29,7 @@ public class WatchlistController {
         return new ResponseEntity<>(watchList, HttpStatus.OK);
     }
 
-    @GetMapping("/add/coin/{coinId}")
+    @PatchMapping("/add/coin/{coinId}")
     public ResponseEntity<Coins> getWatchlistByCoinId(@RequestHeader("Authorization") String jwtToken,
                                                   @PathVariable String coinId) throws Exception {
         Coins addedCoin = watchListService.getWatchlistByCoinId(jwtToken, coinId);

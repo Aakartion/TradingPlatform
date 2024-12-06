@@ -2,7 +2,6 @@ package edu.miu.TradingPlatform.controller.secure;
 
 import edu.miu.TradingPlatform.auth.response.AuthenticationResponseDTO;
 import edu.miu.TradingPlatform.auth.response.ForgotPasswordApiResponse;
-import edu.miu.TradingPlatform.domain.ForgotPasswordToken;
 import edu.miu.TradingPlatform.domain.VerificationType;
 import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ForgotPasswordTokenRequest;
 import edu.miu.TradingPlatform.dto.forgotPasswordToken.request.ResetPasswordRequestDTO;

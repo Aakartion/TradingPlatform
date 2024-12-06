@@ -27,6 +27,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setUser(user);
         payment.setPayment_method(payment_method);
         payment.setAmount(amount);
+        payment.setPayment_order_status(PAYMENT_STATUS.PENDING);
         return paymentRepository.save(payment);
     }
 
@@ -39,6 +40,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Boolean proccedPaymentOrder(Payment payment, String paymentId) {
+        if(payment.getPayment_order_status() == null){
+            payment.setPayment_order_status(PAYMENT_STATUS.PENDING);
+        }
         if(payment.getPayment_order_status().equals(PAYMENT_STATUS.PENDING)){
             if(payment.getPayment_method().equals(PAYMENT_METHOD.DIRECT_FROM_BANK)){
 //                Some logic for payment

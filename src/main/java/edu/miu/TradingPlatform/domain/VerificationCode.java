@@ -14,5 +14,6 @@ public class VerificationCode {
     private User user;
     private String email;
     private String phoneNumber;
+    @Enumerated(EnumType.STRING)
     private VerificationType verificationType;
 }

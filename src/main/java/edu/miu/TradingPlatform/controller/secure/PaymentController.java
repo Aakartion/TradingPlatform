@@ -31,9 +31,9 @@ public class PaymentController {
         Payment payment = paymentService.createPaymentOrder(user, amount, payment_method);
 
         if(payment_method.equals(PAYMENT_METHOD.DIRECT_FROM_BANK)){
-            paymentResponse = paymentService.createDirectPaymentLink(user, amount, payment.getPaymentOrderId());
+            paymentResponse = paymentService.createDirectPaymentLink(user, amount, payment.getPaymentId());
         }else {
-            paymentResponse = paymentService.createThirdPartyPaymentLink(user, amount, payment.getPaymentOrderId());
+            paymentResponse = paymentService.createThirdPartyPaymentLink(user, amount, payment.getPaymentId());
         }
 
         return new ResponseEntity<>(paymentResponse, HttpStatus.OK);

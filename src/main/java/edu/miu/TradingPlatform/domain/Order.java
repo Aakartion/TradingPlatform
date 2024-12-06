@@ -16,11 +16,13 @@ public class Order {
     @ManyToOne    // One user has many order
     private User user;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ORDER_TYPE orderType;
     @Column(nullable = false)
     private BigDecimal orderPrice;
     private LocalDateTime orderTimeStamp = LocalDateTime.now();
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ORDER_STATUS orderStatus;
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private OrderItem orderItem;
