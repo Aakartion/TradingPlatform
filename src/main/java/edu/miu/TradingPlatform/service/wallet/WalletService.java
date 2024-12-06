@@ -9,7 +9,7 @@ import edu.miu.TradingPlatform.exception.InsufficientBalanceException;
 public interface WalletService {
   Wallet getUserWallet(String jwtToken);
 
-  Wallet addBalance(Wallet wallet, Double balance);
+  Wallet addBalance(Wallet wallet, Long balance);
 
   Wallet findWalletByWalletId(Long walletId);
 
