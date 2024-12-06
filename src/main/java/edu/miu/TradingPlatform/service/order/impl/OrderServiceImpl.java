@@ -11,6 +11,7 @@ import edu.miu.TradingPlatform.service.coins.CoinsService;
 import edu.miu.TradingPlatform.service.order.OrderService;
 import edu.miu.TradingPlatform.service.user.UserService;
 import edu.miu.TradingPlatform.service.wallet.WalletService;
+import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -93,7 +94,8 @@ public class OrderServiceImpl implements OrderService {
     throw new InvalidOrderTypeException("Invalid Order Type");
   }
 
-  private Order sellAsset(String jwtToken, Coins coin, double quantity, User user)
+  @Transactional
+  protected Order sellAsset(String jwtToken, Coins coin, double quantity, User user)
       throws Exception {
     if (quantity <= 0) {
       throw new InvalidOrderTypeException("Quantity should be > 0");
@@ -135,7 +137,8 @@ public class OrderServiceImpl implements OrderService {
     return orderItemRepository.save(orderItem);
   }
 
-  private Order buyAsset(String jwtToken, Coins coin, double quantity, User user) throws Exception {
+  @Transactional
+  protected Order buyAsset(String jwtToken, Coins coin, double quantity, User user) throws Exception {
     if (quantity <= 0) {
       throw new InvalidOrderTypeException("Quantity should be > 0");
     }
