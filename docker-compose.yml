@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready _U trader -d trading-app"]
+      test: ["CMD-SHELL", "pg_isready -U trader -d trading-app"]
       interval: 10s  # health check in every 10 sec
       timeout: 5s # Timeout for each healthcheck (Health check must be completed within 5 sec)
       retries: 3 # Retry up to 3 times before marking as unhealthy
@@ -22,9 +22,9 @@ services:
     image: trading-app
     container_name: trading-app
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/trading-app
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgreSQL:5432/trading-app
       - SPRING_DATASOURCE_USERNAME=trader
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_PASSWORD=12345
     ports:
       - "8080:8080"
     depends_on:
