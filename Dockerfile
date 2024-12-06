@@ -2,8 +2,8 @@ FROM amazoncorretto:21
 
 WORKDIR /app
 
-COPY target/app.jar /app
+COPY target/TradingPlatform-1.0.0.jar /app
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/trading-app.jar"]
