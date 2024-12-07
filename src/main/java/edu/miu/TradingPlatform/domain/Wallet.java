@@ -13,5 +13,5 @@ public class Wallet {
     private Long walletId;
     @OneToOne
     private User user;
-    private BigDecimal walletBalance;
+    private BigDecimal walletBalance = BigDecimal.ZERO;
 }

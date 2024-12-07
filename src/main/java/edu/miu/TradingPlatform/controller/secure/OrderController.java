@@ -27,6 +27,7 @@ public class OrderController {
 
     @PostMapping("/pay")
     public ResponseEntity<Order> payOrderPayment(@RequestBody OrderRequestDTO orderRequestDTO, @RequestHeader("Authorization") String jwtToken) throws Exception {
+    System.out.println("THis is token:: " + jwtToken);
         Order order = orderService.payOrderPayment(orderRequestDTO, jwtToken);
         return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
     }

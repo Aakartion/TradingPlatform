@@ -1,9 +1,9 @@
 package edu.miu.TradingPlatform.dto.order.request;
 
-import edu.miu.TradingPlatform.domain.ORDER_STATUS;
+import edu.miu.TradingPlatform.domain.ORDER_TYPE;
 
 public record OrderRequestDTO(
          String coinId,
          double quantity,
-         ORDER_STATUS orderType
+         ORDER_TYPE orderType
 ) {}

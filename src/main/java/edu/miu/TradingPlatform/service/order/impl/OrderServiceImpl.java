@@ -85,6 +85,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public Order payOrderPayment(OrderRequestDTO orderRequestDTO, String jwtToken) throws Exception {
     User user = userService.findUserByJwtToken(jwtToken);
+    System.out.println("Here is the user: " + user);
     Coins coin = coinsService.findCoinByCoinId(orderRequestDTO.coinId());
     if (orderRequestDTO.orderType().equals(ORDER_TYPE.BUY)) {
       return buyAsset(jwtToken, coin, orderRequestDTO.quantity(), user);
