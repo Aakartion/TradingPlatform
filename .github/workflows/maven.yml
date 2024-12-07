@@ -47,4 +47,4 @@ jobs:
       run: |
         aws eks update-kubeconfig --region $AWS_REGION --name $AWS_CLUSTER
         kubectl apply -f ./k8s/trader-deployment.yml
-        kubectl rollout restart deployment trading-platform
+        kubectl rollout restart deployment trader-deployment
