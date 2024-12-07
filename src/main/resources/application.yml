@@ -10,7 +10,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:postgresql://localhost:5432/trading-app
-    username: root
+    username: trader
     password: 12345
     driver-class-name: org.postgresql.Driver
 
