@@ -1,0 +1,50 @@
+name: Deploy trading-app to EKS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'corretto'
+        cache: maven
+        
+    - name: Build with Maven
+      run: |
+        docker compose up -d postgres
+        mvn -B clean package --file pom.xml
+        docker compose down
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: aakartion/trading-app:latest
+
+    - name: Deploy to AWS EKS
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        AWS_CLUSTER: ${{ vars.AWS_CLUSTER }}
+      run: |
+        aws eks update-kubeconfig --region $AWS_REGION --name $AWS_CLUSTER
+        kubectl apply -f ./k8s/trader-deployment.yml
+        kubectl rollout restart deployment trading-platform
