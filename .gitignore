@@ -39,3 +39,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/application-kube.yml
+
+k8s/postgres-config.yml
+k8s/postgres-secret.yml

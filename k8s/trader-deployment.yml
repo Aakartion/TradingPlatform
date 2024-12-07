@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trader-deployment
+  labels:
+    app: trading-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: trading-platform
+  template:
+    metadata:
+      labels:
+        app: trading-platform
+    spec:
+      containers:
+        - name: trading-platform
+          image: aakartion/trading-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: url
+                  name: postgres-config
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: postgres-secret
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: postgres-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trader-service
+spec:
+  selector:
+    app: trading-platform
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
